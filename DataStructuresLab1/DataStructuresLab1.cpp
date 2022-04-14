@@ -17,41 +17,28 @@ void printList(Node* n) {
 	}
 }
 
-void insertAtTheEnd(Node** head, int newValue) {
+void insertAtTheHead(Node** head, int newValue) {
 	//create a new node
 	Node* newNode = new Node();
 	newNode->Value = newValue;
-	newNode->Next = nullptr;
-	if (*head == nullptr) {
-		*head = newNode;
-		return;
-	}
-	//look for the last node
-	Node* Last = *head;
-	while (Last->Next != nullptr) {
-		Last = Last->Next;
-	}
-	//insert newnode at the end
-	Last->Next = newNode;
+	newNode->Next = *head;
+	*head = newNode;
 }
 
 
 int main()
 {
     //cout << "Hello World!\n";
-
 	//Run independant random
 	srand(time(0));
 	Node* head = new Node();
 	head->Value = rand();
 	int numberOfNodes = 10000;
-
 	for (size_t i = 0; i < numberOfNodes; i++)
 	{
 		int bob = rand();
-		insertAtTheEnd(&head, bob);
+		insertAtTheHead(&head, bob);
 	}
-
 	printList(head);
 }
 
@@ -62,6 +49,6 @@ int main()
 //   1. Use the Solution Explorer window to add/manage files
 //   2. Use the Team Explorer window to connect to source control
 //   3. Use the Output window to see build output and other messages
-//   4. Use the Error Listfsd window to view errors
+//   4. Use the Error Lists window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
