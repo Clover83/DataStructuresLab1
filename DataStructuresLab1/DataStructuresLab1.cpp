@@ -1,67 +1,162 @@
-// DataStructuresLab1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <math.h>
+
 using namespace std;
 
-class Node {
+
+
+// Singly linked node class
+class SNode {
 public:
-	int Value;
-	Node* Next;
+  int Value;
+  SNode* Next;
+  // (Static) List generators
+
 };
 
-void printList(Node* n) {
+void singleBSort(SNode* head);
+
+void printList(SNode* n) {
 	while (n != nullptr) {
 		cout << n->Value << endl;
 		n = n->Next;
 	}
 }
-
-void insertAtTheEnd(Node** head, int newValue) {
+void SinglyGenerator(SNode** head, int newValue) {
 	//create a new node
-	Node* newNode = new Node();
+	SNode* newNode = new SNode();
 	newNode->Value = newValue;
-	newNode->Next = nullptr;
-	if (*head == nullptr) {
-		*head = newNode;
-		return;
-	}
-	//look for the last node
-	Node* Last = *head;
-	while (Last->Next != nullptr) {
-		Last = Last->Next;
-	}
-	//insert newnode at the end
-	Last->Next = newNode;
+	newNode->Next = *head;
+	*head = newNode;
 }
 
+// Doubly linked node class
+class DNode {
+public:
+  int Value;
+  DNode* Next;
+  DNode* Prev;
 
-int main()
-{
-    //cout << "Hello World!\n";
+  // (Static) List generators
+};
 
-	//Run independant random
-	srand(time(0));
-	Node* head = new Node();
-	head->Value = rand();
-	int numberOfNodes = 10000;
+void DoublyGenerator(DNode** head, int newValue) {
+  DNode * newNode = new DNode();
+  newNode->Prev = nullptr;
+  newNode->Value = newValue;
+  newNode->Next = *head;
+  *head = newNode;
+}
+
+int main() {
+
+  //Run indepentant random values
+  srand(time(0));
+  
+  //Makes first node for singly linked
+  SNode* singlyHead = new SNode();
+  singlyHead->Value = rand();
+  
+  //Makes first node for doubly
+  DNode* doublyHead = new DNode();
+  doublyHead->Value = rand();
+
+  //Number of Nodes
+	int numberOfNodes = 10;
+	
 
 	for (size_t i = 0; i < numberOfNodes; i++)
 	{
-		int bob = rand();
-		insertAtTheEnd(&head, bob);
-	}
+		int randomValue = i;
+    //Uncomment when need to generate
+    
+		SinglyGenerator(&singlyHead, randomValue);
 
-	printList(head);
+    
+    //DoublyGenerator(&doublyHead,randomValue);
+    
+	} 
+  printList(singlyHead);
+  singleBSort(singlyHead);
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+void singleBSort(SNode* singlyHead) {
+  int sortedLength = 0;
+  //while loop that continues until next pointer != nullptr
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error Listfsd window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+  SNode* firstUnsorted = singlyHead->Next;
+  SNode* newHead = singlyHead;
+  
+  // First loop
+  while(firstUnsorted != nullptr) {
+    // Move P and unlink
+    SNode* unsorted = firstUnsorted;
+    firstUnsorted = unsorted->Next;
+    unsorted->Next = nullptr;
+    // Set bounds and increment
+    int lowerBound = 0, upperBound = sortedLength, toWalk = 0;
+    sortedLength++;
+    
+    // Perform binary search
+    int middle = floor((lowerBound+upperBound)/2);
+    SNode* middleNode = newHead;
+    while (true) {
+      // Walk to get middle value
+      for(int i = 0; i < middle; i++) {
+        if(middleNode->Next != nullptr) {
+          middleNode = middleNode->Next;  
+        } 
+        else break;
+      }
+      // calculate new middle bounds
+
+
+
+      // at end
+      if (upperBound - lowerBound > 1) {
+        // insert
+        break;
+      }
+    } 
+  }
+  
+}
+
+void doubleBSort(DNode* head) {
+
+}
+
+
+class Data {
+private:
+  vector<int> nValues;
+  vector<float> times;
+  string filename;
+
+public:
+  Data(string name) {
+    filename = name + ".csv";
+  }
+
+  void push(int n, float time) {
+    nValues.push_back(n);
+    times.push_back(time);
+  }
+
+  void write() {
+    ofstream fh;
+    if (nValues.size() != times.size()) {
+      cout << "Data.write: dict mismatch!" << endl;
+    }
+
+    fh.open(filename);
+    fh << "n,time\n";
+    for(int i = 0; i < nValues.size(); i++) {
+      fh << to_string(nValues.at(i)) << "," << to_string(times.at(i)) << "\n";
+    }
+    fh.close();
+    
+  }
+};
