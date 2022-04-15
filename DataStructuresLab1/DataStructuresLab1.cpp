@@ -1,54 +1,114 @@
-// DataStructuresLab1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
-using namespace std;
+#include <fstream>
+#include <vector>
+#include <math.h>
 
-class Node {
+using namespace std;
+// Singly linked node class
+class SNode {
 public:
 	int Value;
-	Node* Next;
+	SNode* Next;
+
 };
 
-void printList(Node* n) {
+void printList(SNode* n) {
 	while (n != nullptr) {
 		cout << n->Value << endl;
 		n = n->Next;
 	}
 }
-
-void insertAtTheHead(Node** head, int newValue) {
-	//create a new node
-	Node* newNode = new Node();
+void SinglyGenerator(SNode** head, int newValue) {
+	SNode* newNode = new SNode();
 	newNode->Value = newValue;
 	newNode->Next = *head;
 	*head = newNode;
 }
 
+// Doubly linked node class
+class DNode {
+public:
+	int Value;
+	DNode* Next;
+	DNode* Prev;
+};
 
-int main()
-{
-    //cout << "Hello World!\n";
-	//Run independant random
-	srand(time(0));
-	Node* head = new Node();
-	head->Value = rand();
-	int numberOfNodes = 10000;
-	for (size_t i = 0; i < numberOfNodes; i++)
-	{
-		int bob = rand();
-		insertAtTheHead(&head, bob);
+
+void bSort(SNode* singlyHead) {
+	int lowerBound = 0;
+	int upperBound = 0;
+	int sortedLength = 0;
+	int toWalk = 0; // prob dont need
+	SNode* newHead = singlyHead;
+	while (singlyHead->Next != nullptr) {
+		if (sortedLength == 0) {
+			sortedLength++;
+		}
+		else {
+
+			SNode* middleNode = newHead;
+			int newUnsortedValue = singlyHead->Next->Value;
+			//compare it with middle value index
+			//middle should be floor(upper-lower)/2 etc.
+			int middle = (floor(sortedLength) / 2);
+			//get middle value
+			for (size_t i = 0; i < middle; i++) // might need to do a seperate function that gets called
+			{
+				if (middle == 0)
+					middle = middleNode->Value;
+				else
+					middleNode = middleNode->Next;
+			}
+			if (middleNode->Value == newUnsortedValue) {
+				//equal insert next to
+			}
+			if (middleNode->Value > newUnsortedValue) {
+				//to the left
+				cout << "to left" << endl;
+				//upperBound = middle;
+			}
+			if (middleNode->Value < newUnsortedValue) {
+				//to the right
+				cout << "to right" << endl;
+				//lowerBound = middle;
+			}
+
+			//test
+			cout << middleNode->Value << endl;
+			cout << newUnsortedValue << endl;
+
+			sortedLength++;
+			singlyHead = singlyHead->Next;
+		}
 	}
-	printList(head);
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+int main() {
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error Lists window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+	//Run indepentant random values
+	srand(time(0));
+
+	//Makes first node for singly linked
+	SNode* singlyHead = new SNode();
+	singlyHead->Value = rand();
+	//Makes first node for doubly
+	//DNode* doublyHead = new DNode();
+	//doublyHead->Value = 15;
+
+	//Number of Nodes
+	int numberOfNodes = 10;
+
+	for (size_t i = 0; i < numberOfNodes; i++)
+	{
+		int randomValue = rand();
+		//Uncomment when need to generate
+
+		SinglyGenerator(&singlyHead, randomValue);
+
+
+		//DoublyGenerator(&doublyHead,randomValue);
+
+	}
+	printList(singlyHead);
+	bSort(singlyHead);
+}
