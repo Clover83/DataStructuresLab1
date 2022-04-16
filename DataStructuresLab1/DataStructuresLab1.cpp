@@ -34,10 +34,11 @@ public:
 };
 
 
+
+
 void bSort(SNode* singlyHead) {
-	int lowerBound = 0;
-	int upperBound = 0;
 	int sortedLength = 0;
+	int upperBound = 0;
 	int toWalk = 0; // prob dont need
 	SNode* newHead = singlyHead;
 	while (singlyHead->Next != nullptr) {
@@ -45,43 +46,83 @@ void bSort(SNode* singlyHead) {
 			sortedLength++;
 		}
 		else {
-
+		
 			SNode* middleNode = newHead;
-			int newUnsortedValue = singlyHead->Next->Value;
-			//compare it with middle value index
-			//middle should be floor(upper-lower)/2 etc.
-			int middle = (floor(sortedLength) / 2);
-			//get middle value
-			for (size_t i = 0; i < middle; i++) // might need to do a seperate function that gets called
+			SNode* unsorted = singlyHead->Next;
+			int newUnsortedValue = unsorted->Value;
+			//
+			//veikia..? binary atlieka
+			upperBound = sortedLength;
+			int lowerBound = 0;
+			while ((upperBound - lowerBound) != 0) {
+				int middle = (floor(upperBound-lowerBound)/ 2);
+
+				for (size_t i = 0; i < middle; i++)
+				{
+					if (middle == 0)
+						middle = middleNode->Value;
+					else
+						if(middleNode->Next != nullptr)
+							middleNode = middleNode->Next;
+						break;
+				}
+				if (middleNode->Value == newUnsortedValue) {
+					break;
+				}
+				if (middleNode->Value > newUnsortedValue) {
+					//to the left
+					cout << "to left" << endl;
+					upperBound = middle;
+				}
+				if (middleNode->Value < newUnsortedValue) {
+					//to the right
+					cout << "to right" << endl; //ceil
+					lowerBound = (floor(upperBound - lowerBound) / 2)+1; //+1 maybe maybe not, ceil not doing as intended
+					
+				}
+			}
+		if (middleNode->Value > newUnsortedValue) {
+			//SNode* temp = singlyHead->Next;
+
+
+
+		}
+		if (middleNode->Value < newUnsortedValue)
+		{
+			//nzn, kazka blogai darau cia
+			
+			cout << "entered";
+			//sitas turbut ne
+			/*SNode* temp = unsorted;
+			unsorted->Next = middleNode->Next;
+			middleNode->Next = unsorted;
+			for (size_t i = 1; i < sortedLength; i++)
 			{
-				if (middle == 0)
-					middle = middleNode->Value;
-				else
-					middleNode = middleNode->Next;
+				newHead->Next;
+				cout << sortedLength;
 			}
-			if (middleNode->Value == newUnsortedValue) {
-				//equal insert next to
-			}
-			if (middleNode->Value > newUnsortedValue) {
-				//to the left
-				cout << "to left" << endl;
-				//upperBound = middle;
-			}
-			if (middleNode->Value < newUnsortedValue) {
-				//to the right
-				cout << "to right" << endl;
-				//lowerBound = middle;
-			}
+			newHead->Next = temp->Next;*/
+			//SNode* unsorted = singlyHead;
 
-			//test
-			cout << middleNode->Value << endl;
-			cout << newUnsortedValue << endl;
+			//nop
+			/*singlyHead = singlyHead->Next->Next;
+			unsorted->Next = middleNode->Next;
+			middleNode->Next = unsorted->Next;*/
 
-			sortedLength++;
-			singlyHead = singlyHead->Next;
+
+			//? irgi ne
+			//SNode* temp = unsorted;
+			//unsorted->Next = middleNode->Next;
+			//middleNode->Next = unsorted;
+			//newHead->Next->Next = temp->Next;
+			
+		}
+		sortedLength++;
+		singlyHead = singlyHead->Next;
 		}
 	}
 }
+
 
 int main() {
 
@@ -105,10 +146,11 @@ int main() {
 
 		SinglyGenerator(&singlyHead, randomValue);
 
-
 		//DoublyGenerator(&doublyHead,randomValue);
 
 	}
 	printList(singlyHead);
 	bSort(singlyHead);
+	cout << endl << "print after";
+	printList(singlyHead);
 }
