@@ -139,7 +139,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BSortAlgs.cpp" />
+    <ClCompile Include="DataHandler.cpp" />
     <ClCompile Include="DataStructuresLab1.cpp" />
+    <ClCompile Include="DNode.cpp" />
+    <ClCompile Include="SNode.cpp" />
+    <ClCompile Include="Tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BSortAlgs.h" />
+    <ClInclude Include="DataHandler.h" />
+    <ClInclude Include="DNode.h" />
+    <ClInclude Include="SNode.h" />
+    <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
