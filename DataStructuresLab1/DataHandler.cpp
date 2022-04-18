@@ -14,8 +14,8 @@ void DataHandler::write() {
     if (nValues.size() != times.size()) {
         std::cout << "Data.write: dict mismatch!" << std::endl;
     }
-
-    fh.open(filename);
+    // Trunc overwrites existing data
+    fh.open(filename, std::ofstream::trunc);
     fh << "n,time\n";
     for (int i = 0; i < nValues.size(); i++) {
         fh << std::to_string(nValues.at(i)) << "," << std::to_string(times.at(i)) << "\n";

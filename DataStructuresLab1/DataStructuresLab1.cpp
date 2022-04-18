@@ -17,6 +17,8 @@ void exportSingleBSort(std::string name, int size, int resolution) {
     DataHandler dh(name);
 
     for (int i = increment; i < size; i += increment) {
+        int completeness = 100 * i / size;
+        std::cout << std::to_string(completeness) << "%" << std::endl;
         SNode* randomList = SNode::getRandomList(i);
         auto start = high_resolution_clock::now();
         BSortAlgs::singleBSort(randomList);
@@ -29,5 +31,5 @@ void exportSingleBSort(std::string name, int size, int resolution) {
 }
 
 int main() {
-    exportSingleBSort("test", 1000000, 100);
+    exportSingleBSort("random", 4800, 100);
 }
