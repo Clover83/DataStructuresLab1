@@ -20,7 +20,5 @@ public:
 	static DNode* getSortedList(int size);
 	static DNode* getReverseSortedList(int size);
 	static DNode* arrToList(int* arr, int size);
-
-	static void testIsSorted(int nTests);
 };
 

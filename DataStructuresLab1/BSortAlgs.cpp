@@ -81,6 +81,105 @@ SNode* BSortAlgs::singleBSort(SNode* singlyHead) {
     return newHead;
 }
 
-//DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
-//
-//}
+DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
+    int sortedLength = 0;
+
+    DNode* firstUnsorted = doublyHead->next;
+
+    DNode* highest = doublyHead;
+    DNode* lowest = doublyHead;
+
+    lowest->next = nullptr;
+    lowest->prev = nullptr;
+
+    while (firstUnsorted != nullptr) {
+        sortedLength++;
+        DNode* unsorted = firstUnsorted;
+        firstUnsorted = firstUnsorted->next;
+        unsorted->next = nullptr;
+        unsorted->prev = nullptr;
+
+        // Check edges
+        if (unsorted->value >= highest->value) {
+            highest->next = unsorted;
+            unsorted->prev = highest;
+            highest = unsorted;
+            continue;
+        }
+        else if (unsorted->value <= lowest->value) {
+            unsorted->next = lowest;
+            lowest->prev = unsorted;
+            lowest = unsorted;
+            continue;
+        }
+
+        int lowerBound = 0, higherBound = sortedLength - 1;
+        int middle = (lowerBound + higherBound) / 2;
+        DNode* middleNode = lowest->walk(middle);
+        while (true) {
+            if (middleNode == nullptr) {
+                int middle = (lowerBound + higherBound) / 2;
+                middleNode = lowest->walk(middle);
+            }
+
+            // Left
+            if (unsorted->value < middleNode->value) {
+                // Insert
+                if (higherBound - lowerBound <= 1) {
+                    DNode* prev = middleNode->prev;
+                    if (prev != nullptr) {
+                        prev->next = unsorted;
+                        unsorted->prev = prev;
+                    }
+                    unsorted->next = middleNode;
+                    middleNode->prev = unsorted;
+                    break;
+                }
+                higherBound = middle; //yep
+
+                middle = (lowerBound + higherBound) / 2;
+                if (middleNode != nullptr) {
+                    middleNode = middleNode->walk(-middle);
+                }
+            }
+
+            // Right
+            else if (unsorted->value > middleNode->value) {
+                // Insert
+                if (higherBound - lowerBound <= 1) {
+                    DNode* next = middleNode->next; //mid next
+                    if (next != nullptr) {
+                        next->prev = unsorted; //mid next prev = unsorted
+                        unsorted->next = next; //unsorted next = mid next
+                    }
+                    middleNode->next = unsorted;  //yep
+                    unsorted->prev = middleNode; //yep
+                    break;
+                }
+                lowerBound = middle;
+                middle = (lowerBound + higherBound) / 2;
+                if (middleNode != nullptr) {
+                    middleNode = middleNode->walk(sortedLength-middle);
+                }
+
+            }
+
+            // Equal
+            else {
+                // Insert right of middle
+                DNode* next = middleNode->next; //mid next
+                if (next != nullptr) {
+                    next->prev = unsorted; //mid next prev = unsorted
+                    unsorted->next = next; //unsorted next = mid next
+                }
+                middleNode->next = unsorted;  //yep
+                unsorted->prev = middleNode; //yep
+
+                break;
+            }
+
+        }
+
+    }
+    return lowest;
+}

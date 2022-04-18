@@ -13,7 +13,7 @@ DNode::DNode(int value) {
 }
 
 void DNode::printList() {
-    DNode* n = this;
+    DNode* n = this;  
     while (n != nullptr) {
         std::cout << n->value << std::endl;
         n = n->next;
@@ -31,9 +31,26 @@ DNode* DNode::pushBack(int newValue) {
     return newNode;
 }
 
-//DNode* DNode::walk(int steps) {
-//
-//}
+DNode* DNode::walk(int steps) {
+    DNode* current = this;
+    if (steps < 0) {
+        for (int i = 0; i < -steps; i++) {
+            current = current->prev;
+            if (current == nullptr) {
+                return nullptr;
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < steps; i++) {
+            current = current->next;
+            if (current == nullptr) {
+                return nullptr;
+            }
+        }
+    }
+    return current;
+}
 
 DNode* DNode::getRandomList(int size) {
     // time(0) returns current time, resolution in seconds
@@ -61,10 +78,12 @@ DNode* DNode::getReverseSortedList(int size) {
     }
     return doublyHead;
 }
-//DNode* DNode::arrToList(int* arr, int size) {
-//
-//}
-
-//void DNode::testIsSorted(int nTests) {
-//
-//}
+DNode* DNode::arrToList(int* arr, int size) {
+    DNode* head = new DNode(*arr);
+    DNode* current = head;
+    for (int i = 1; i < size; i++) {
+        current->next = new DNode(*(arr + i));
+        current = current->next;
+    }
+    return head;
+}

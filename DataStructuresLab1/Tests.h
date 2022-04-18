@@ -6,5 +6,6 @@ class Tests
 {
 public:
 	static void singleBSortCanSort(int nTests);
+	static void doubleBSortCanSort(int nTests);
 };
 
