@@ -41,12 +41,23 @@ public:
         return newNode;
     }
 
+    SNode* walk(int steps) {
+        SNode* current = this;
+        for (int i = 0; i < steps; i++) {
+            current = current->next;
+            if (current == nullptr) {
+                return nullptr;
+            }
+        }
+        return current;
+    }
+
     // (Static) List generators
 
     static SNode* getRandomList(int size) {
         // time(0) returns current time, resolution in seconds
         unsigned int seed = time(0);
-        cout << "Using seed: " << to_string(seed) << endl;
+        //cout << "Using seed: " << to_string(seed) << endl;
         srand(seed);
         //srand(10928);
         SNode* singlyHead = new SNode(rand() % size);
@@ -73,6 +84,37 @@ public:
             singlyHead = singlyHead->pushBack(i);
         }
         return singlyHead;
+    }
+
+    static SNode* arrToList(int* arr, int size) {
+        SNode* head = new SNode(*arr);
+        SNode* current = head;
+        for (int i = 1; i < size; i++) {
+            current->next = new SNode(*(arr + i));
+            current = current->next;
+        }
+        return head;
+    }
+
+    static void testIsSorted(int nTests) {
+        for (int i = 0; i < nTests; i++) {
+            SNode* singlyHead = SNode::getRandomList(10);
+            singlyHead = newSingleBSort(singlyHead);
+
+            SNode* current = singlyHead;
+            while (current->next != nullptr) {
+                if (current->next->value < current->value) {
+                    cout << "Failed!" << endl;
+                    break;
+                }
+                current = current->next;
+            }
+            if (i % 10000 == 0) {
+                float completeness = (float)i / (float)nTests;
+                cout << to_string(completeness) << "%" << endl;
+            }
+        }
+        cout << "Tests complete." << endl;
     }
 };
 
@@ -247,15 +289,100 @@ public:
 };
 
 
+SNode* newSingleBSort(SNode* singlyHead) {
+    int sortedLength = 0;
+    SNode* firstUnsorted = singlyHead->next;
+    SNode* newHead = singlyHead;
+    newHead->next = nullptr;
+
+    SNode* highest = newHead;
+    SNode* lowest = newHead;
+
+    while (firstUnsorted != nullptr) {
+        sortedLength++;
+        // Move first unsorted, unlink
+        SNode* unsorted = firstUnsorted;
+        firstUnsorted = firstUnsorted->next;
+        unsorted->next = nullptr;
+
+        // Check edges
+        if (unsorted->value >= highest->value) {
+            highest->next = unsorted;
+            highest = unsorted;
+            continue;
+        }
+        else if (unsorted->value <= lowest->value) {
+            unsorted->next = lowest;
+            lowest = unsorted;
+            newHead = lowest; // remove one of these, they are equivalent
+            continue;
+        }
+
+        // Set bounds and middle
+        int lowerBound = 0, higherBound = sortedLength-1;
+        int middle = (lowerBound + higherBound) / 2;
+        SNode* middleNode = newHead->walk(middle);
+        // Binary search
+        while (true) {
+            middle = (lowerBound + higherBound) / 2;
+            middleNode = newHead->walk(middle); // replace with trick
+            // Left
+            if (unsorted->value < middleNode->value) {
+                // Insert
+                if (higherBound - lowerBound <= 1) {
+                    SNode* prev = newHead->walk(middle - 1);
+                    if (prev != newHead && prev != nullptr) {
+                        prev->next = unsorted;
+                    }
+
+                    unsorted->next = middleNode;
+                    if (middleNode->next == unsorted) {
+                        middleNode->next = nullptr;
+                    }
+                    if (prev == newHead) {
+                        newHead = unsorted;
+                    }
+                    break;
+                }
+
+                higherBound = middle;
+            }
+            // Right
+            else if (unsorted->value > middleNode->value) {
+                // Insert
+                if (higherBound - lowerBound <= 1) {
+                    unsorted->next = middleNode->next;
+                    middleNode->next = unsorted;
+                    break;
+                }
+                lowerBound = middle;
+            }
+            // Equal
+            else {
+                // Insert right of middle
+                unsorted->next = middleNode->next;
+                middleNode->next = unsorted;
+                break;
+            }
+        }
+        // Binary search end, sorting next
+    }
+    return newHead;
+
+}
+
 
 
 
 int main() {
-    SNode* singlyHead = SNode::getRandomList(6);
-    singlyHead->printList();
-    cout << "--------------" << endl;
-    singlyHead = singleBSort(singlyHead);
+    // Any decending array only trigger left side in sort
+    //int* arr = new int[] {6, 0, 9, 2, 4, 7, 5, 7, 5, 5};
+    //SNode* singlyHead = SNode::arrToList(arr, 10);
+
+    // test
+    SNode::testIsSorted(1000000);
 }
+
 
 
 
