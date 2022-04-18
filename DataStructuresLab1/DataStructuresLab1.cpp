@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <chrono>
 
 #include "SNode.h"
 #include "DNode.h"
@@ -8,13 +9,25 @@
 #include "DataHandler.h"
 
 
+using namespace std::chrono;
 
+void exportSingleBSort(std::string name, int size, int resolution) {
+    int increment = size / resolution;
+
+    DataHandler dh(name);
+
+    for (int i = increment; i < size; i += increment) {
+        SNode* randomList = SNode::getRandomList(i);
+        auto start = high_resolution_clock::now();
+        BSortAlgs::singleBSort(randomList);
+        auto stop = high_resolution_clock::now();
+        // memory leak
+        auto duration = duration_cast<microseconds>(stop - start);
+        dh.push(i, duration.count());
+    }
+    dh.write();
+}
 
 int main() {
-    // Any decending array only trigger left side in sort
-    //int* arr = new int[] {6, 0, 9, 2, 4, 7, 5, 7, 5, 5};
-    //SNode* singlyHead = SNode::arrToList(arr, 10);
-
-    // test
-    Tests::singleBSortCanSort(10000000);
+    exportSingleBSort("test", 1000000, 100);
 }
