@@ -1,162 +1,84 @@
 #include <iostream>
-#include <fstream>
-#include <vector>
-#include <math.h>
+#include <string>
+#include <chrono>
 
-using namespace std;
+#include "SNode.h"
+#include "DNode.h"
+#include "BSortAlgs.h"
+#include "Tests.h"
+#include "DataHandler.h"
 
 
+using namespace std::chrono;
 
-// Singly linked node class
-class SNode {
-public:
-  int Value;
-  SNode* Next;
-  // (Static) List generators
+void exportSingleBSort(std::string name, int size, int resolution) {
+    int increment = size / resolution;
 
-};
+    DataHandler dh(name);
 
-void singleBSort(SNode* head);
-
-void printList(SNode* n) {
-	while (n != nullptr) {
-		cout << n->Value << endl;
-		n = n->Next;
-	}
-}
-void SinglyGenerator(SNode** head, int newValue) {
-	//create a new node
-	SNode* newNode = new SNode();
-	newNode->Value = newValue;
-	newNode->Next = *head;
-	*head = newNode;
+    for (int i = increment; i < size; i += increment) {
+        int completeness = 100 * i / size;
+        std::cout << std::to_string(completeness) << "%" << std::endl;
+        SNode* randomList = SNode::getReverseSortedList(i);
+        auto start = high_resolution_clock::now();
+        BSortAlgs::singleBSort(randomList);
+        auto stop = high_resolution_clock::now();
+        // (one of many) memory leaks
+        auto duration = duration_cast<microseconds>(stop - start);
+        dh.push(i, duration.count());
+    }
+    dh.write();
 }
 
-// Doubly linked node class
-class DNode {
-public:
-  int Value;
-  DNode* Next;
-  DNode* Prev;
+void exportDoubleBSort(std::string name, int size, int resolution) {
+    int increment = size / resolution;
 
-  // (Static) List generators
-};
+    DataHandler dh(name);
 
-void DoublyGenerator(DNode** head, int newValue) {
-  DNode * newNode = new DNode();
-  newNode->Prev = nullptr;
-  newNode->Value = newValue;
-  newNode->Next = *head;
-  *head = newNode;
+    for (int i = increment; i < size; i += increment) {
+        int completeness = 100 * i / size;
+        std::cout << std::to_string(completeness) << "%" << std::endl;
+        DNode* randomList = DNode::getRandomList(i);
+        auto start = high_resolution_clock::now();
+        BSortAlgs::doubleBSort(randomList);
+        auto stop = high_resolution_clock::now();
+        // (one of many) memory leaks
+        auto duration = duration_cast<microseconds>(stop - start);
+        dh.push(i, duration.count());
+    }
+    dh.write();
 }
+
 
 int main() {
+    //exportSingleBSort("singleReversed", 10000, 100);
+    exportDoubleBSort("bigDoubly", 100000, 5);
+    //Tests::doubleBSortCanSort(1000000);
+    //Tests::singleBSortCanSort(100000);
 
-  //Run indepentant random values
-  srand(time(0));
-  
-  //Makes first node for singly linked
-  SNode* singlyHead = new SNode();
-  singlyHead->Value = rand();
-  
-  //Makes first node for doubly
-  DNode* doublyHead = new DNode();
-  doublyHead->Value = rand();
+    //int* arr = new int[] {3, 7, 0, 4, 10, 2, 1, 1, 11, 4, 4, 7};
+    //int* arr = new int[] {0, 4, 3, 5, 1, 1};
+    //DNode* doublyHead = DNode::arrToList(arr, 6);
+    // Random list:
+    //DNode* doublyHead = DNode::getRandomList(12);
 
-  //Number of Nodes
-	int numberOfNodes = 10;
-	
-
-	for (size_t i = 0; i < numberOfNodes; i++)
-	{
-		int randomValue = i;
-    //Uncomment when need to generate
-    
-		SinglyGenerator(&singlyHead, randomValue);
+    //for (int i = 0; i < 100000; i++) {
+    //    DNode* doublyHead = DNode::getRandomList(12);
+    //    //Print the list 
+    //    std::cout << "-------------- U:" << std::endl;
+    //    doublyHead->printList();
+    //    doublyHead = BSortAlgs::doubleBSort(doublyHead);
+    //    std::cout << "-------------- S:" << std::endl;
+    //    doublyHead->printList();
+    //}
 
     
-    //DoublyGenerator(&doublyHead,randomValue);
+    // Print the list 
+    //std::cout << "-------------- U:" << std::endl;
+    //doublyHead->printList();
+    //doublyHead = BSortAlgs::doubleBSort(doublyHead);
+    //std::cout << "-------------- S:" << std::endl;
+    //doublyHead->printList();
     
-	} 
-  printList(singlyHead);
-  singleBSort(singlyHead);
-}
-
-void singleBSort(SNode* singlyHead) {
-  int sortedLength = 0;
-  //while loop that continues until next pointer != nullptr
-
-  SNode* firstUnsorted = singlyHead->Next;
-  SNode* newHead = singlyHead;
-  
-  // First loop
-  while(firstUnsorted != nullptr) {
-    // Move P and unlink
-    SNode* unsorted = firstUnsorted;
-    firstUnsorted = unsorted->Next;
-    unsorted->Next = nullptr;
-    // Set bounds and increment
-    int lowerBound = 0, upperBound = sortedLength, toWalk = 0;
-    sortedLength++;
-    
-    // Perform binary search
-    int middle = floor((lowerBound+upperBound)/2);
-    SNode* middleNode = newHead;
-    while (true) {
-      // Walk to get middle value
-      for(int i = 0; i < middle; i++) {
-        if(middleNode->Next != nullptr) {
-          middleNode = middleNode->Next;  
-        } 
-        else break;
-      }
-      // calculate new middle bounds
-
-
-
-      // at end
-      if (upperBound - lowerBound > 1) {
-        // insert
-        break;
-      }
-    } 
-  }
-  
-}
-
-void doubleBSort(DNode* head) {
 
 }
-
-
-class Data {
-private:
-  vector<int> nValues;
-  vector<float> times;
-  string filename;
-
-public:
-  Data(string name) {
-    filename = name + ".csv";
-  }
-
-  void push(int n, float time) {
-    nValues.push_back(n);
-    times.push_back(time);
-  }
-
-  void write() {
-    ofstream fh;
-    if (nValues.size() != times.size()) {
-      cout << "Data.write: dict mismatch!" << endl;
-    }
-
-    fh.open(filename);
-    fh << "n,time\n";
-    for(int i = 0; i < nValues.size(); i++) {
-      fh << to_string(nValues.at(i)) << "," << to_string(times.at(i)) << "\n";
-    }
-    fh.close();
-    
-  }
-};
