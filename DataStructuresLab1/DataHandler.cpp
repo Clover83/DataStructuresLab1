@@ -4,7 +4,7 @@ DataHandler::DataHandler(std::string name) {
 	filename = name + ".csv";
 }
 
-void DataHandler::push(int n, float time) {
+void DataHandler::push(int n, long long time) {
 	nValues.push_back(n);
 	times.push_back(time);
 }

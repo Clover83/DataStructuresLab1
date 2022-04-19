@@ -8,14 +8,14 @@ class DataHandler
 {
 private:
 	std::vector<int> nValues;
-	std::vector<float> times;
+	std::vector<long long> times;
 
 	std::string filename;
 
 public:
 	DataHandler(std::string name);
 
-	void push(int n, float time);
+	void push(int n, long long time);
 	void write();
 
 };
