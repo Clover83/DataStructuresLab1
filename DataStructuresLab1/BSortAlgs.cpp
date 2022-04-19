@@ -142,14 +142,6 @@ DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
 
                     unsorted->next = middleNode;
                     middleNode->prev = unsorted;
-
-                    // may not be needed
-                    if (middleNode->next == unsorted) {
-                        middleNode->next = nullptr;
-                    }
-                    if (middleNode == lowest) {
-                        lowest = unsorted;
-                    }
                     break;
                 }
 
