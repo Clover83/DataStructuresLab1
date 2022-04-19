@@ -126,12 +126,12 @@ DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
         int middle = (lowerBound + higherBound) / 2;
         int oldMiddle = middle;
         DNode* middleNode = lowest->walk(middle);
-        bool left = false;
+
         // Binary search
         while (true) {
             // Left
             if (unsorted->value < middleNode->value) {
-                left = true;
+
                 // Insert
                 if (higherBound - lowerBound <= 1) {
                     DNode* prev = middleNode->prev;
@@ -161,7 +161,7 @@ DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
             }
             // Right
             else if (unsorted->value > middleNode->value) {
-                left = false;
+
                 // Insert
                 if (higherBound - lowerBound <= 1) {
                     DNode* next = middleNode->next;
