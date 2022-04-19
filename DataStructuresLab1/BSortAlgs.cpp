@@ -33,10 +33,9 @@ SNode* BSortAlgs::singleBSort(SNode* singlyHead) {
         int lowerBound = 0, higherBound = sortedLength - 1;
         int middle = (lowerBound + higherBound) / 2;
         SNode* middleNode = newHead->walk(middle);
+        int oldMiddle = middle;
         // Binary search
         while (true) {
-            middle = (lowerBound + higherBound) / 2;
-            middleNode = newHead->walk(middle); // replace with trick
             // Left
             if (unsorted->value < middleNode->value) {
                 // Insert
@@ -57,6 +56,10 @@ SNode* BSortAlgs::singleBSort(SNode* singlyHead) {
                 }
 
                 higherBound = middle;
+
+                oldMiddle = middle;
+                middle = (lowerBound + higherBound) / 2;
+                middleNode = newHead->walk(middle);
             }
             // Right
             else if (unsorted->value > middleNode->value) {
@@ -67,6 +70,11 @@ SNode* BSortAlgs::singleBSort(SNode* singlyHead) {
                     break;
                 }
                 lowerBound = middle;
+
+                // Trick
+                oldMiddle = middle;
+                middle = (lowerBound + higherBound) / 2;
+                middleNode = middleNode->walk(middle - oldMiddle);
             }
             // Equal
             else {

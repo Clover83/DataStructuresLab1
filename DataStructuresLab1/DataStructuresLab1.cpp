@@ -51,8 +51,8 @@ void exportDoubleBSort(std::string name, int size, int resolution) {
 
 
 int main() {
-    //exportSingleBSort("random", 4800, 100);
-    exportDoubleBSort("doubly", 4800, 100);
+    exportSingleBSort("newSingle", 4800, 100);
+    //exportDoubleBSort("doubly", 4800, 100);
     //Tests::doubleBSortCanSort(1000000);
     //Tests::singleBSortCanSort(100000);
 
