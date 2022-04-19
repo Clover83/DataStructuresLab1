@@ -83,6 +83,116 @@ SNode* BSortAlgs::singleBSort(SNode* singlyHead) {
 
 DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
     int sortedLength = 0;
+    DNode* firstUnsorted = doublyHead->next;
+
+    DNode* lowest = doublyHead;
+    lowest->next = nullptr;
+    lowest->prev = nullptr;
+
+    DNode* highest = lowest;
+
+    while (firstUnsorted != nullptr) {
+        sortedLength++;
+        // Move first unsorted, unlink
+        DNode* unsorted = firstUnsorted;
+        firstUnsorted = firstUnsorted->next;
+        unsorted->next = nullptr;
+        unsorted->prev = nullptr;
+
+        // Check edges
+        if (unsorted->value >= highest->value) {
+            highest->next = unsorted;
+            unsorted->prev = highest;
+            highest = unsorted;
+            continue;
+        }
+        else if (unsorted->value <= lowest->value) {
+            unsorted->next = lowest;
+            lowest->prev = unsorted;
+            lowest = unsorted;
+            continue;
+        }
+
+        // Set bounds and middle
+        int lowerBound = 0, higherBound = sortedLength - 1;
+        int middle = (lowerBound + higherBound) / 2;
+        int oldMiddle = middle;
+        DNode* middleNode = lowest->walk(middle);
+        bool left = false;
+        // Binary search
+        while (true) {
+            // Left
+            if (unsorted->value < middleNode->value) {
+                left = true;
+                // Insert
+                if (higherBound - lowerBound <= 1) {
+                    DNode* prev = middleNode->prev;
+                    if (prev != nullptr) {
+                        prev->next = unsorted;
+                    }
+                    unsorted->prev = prev;
+
+                    unsorted->next = middleNode;
+                    middleNode->prev = unsorted;
+
+                    // may not be needed
+                    if (middleNode->next == unsorted) {
+                        middleNode->next = nullptr;
+                    }
+                    if (middleNode == lowest) {
+                        lowest = unsorted;
+                    }
+                    break;
+                }
+
+                higherBound = middle;
+
+                oldMiddle = middle;
+                middle = (lowerBound + higherBound) / 2;
+                middleNode = middleNode->walk(-oldMiddle + middle);
+            }
+            // Right
+            else if (unsorted->value > middleNode->value) {
+                left = false;
+                // Insert
+                if (higherBound - lowerBound <= 1) {
+                    DNode* next = middleNode->next;
+                    if (next != nullptr) {
+                        next->prev = unsorted;
+                    }
+                    unsorted->next = next;
+
+                    middleNode->next = unsorted;
+                    unsorted->prev = middleNode;
+                    break;
+                }
+                lowerBound = middle;
+
+                oldMiddle = middle;
+                middle = (lowerBound + higherBound) / 2;
+                middleNode = middleNode->walk(middle - oldMiddle);
+            }
+            // Equal
+            else {
+                // Insert right of middle
+                DNode* next = middleNode->next;
+                if (next != nullptr) {
+                    next->prev = unsorted;
+                }
+                unsorted->next = next;
+
+                middleNode->next = unsorted;
+                unsorted->prev = middleNode;
+                break;
+            }
+        }
+        // Binary search end, sorting next
+    }
+    return lowest;
+}
+
+DNode* BSortAlgs::oldDoubleBSort(DNode* doublyHead) {
+    int sortedLength = 0;
 
     DNode* firstUnsorted = doublyHead->next;
 
@@ -159,7 +269,7 @@ DNode* BSortAlgs::doubleBSort(DNode* doublyHead) {
                 lowerBound = middle;
                 middle = (lowerBound + higherBound) / 2;
                 if (middleNode != nullptr) {
-                    middleNode = middleNode->walk(sortedLength-middle);
+                    middleNode = middleNode->walk(sortedLength - middle);
                 }
 
             }

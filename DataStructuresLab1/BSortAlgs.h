@@ -7,5 +7,7 @@ class BSortAlgs
 public:
 	static SNode* singleBSort(SNode* singlyHead);
 	static DNode* doubleBSort(DNode* doublyHead);
+	
+	static DNode* oldDoubleBSort(DNode* doublyHead);
 };
 
