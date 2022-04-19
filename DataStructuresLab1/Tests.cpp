@@ -4,7 +4,8 @@
 void Tests::singleBSortCanSort(int nTests) {
     for (int i = 0; i < nTests; i++) {
         const int size = 20;
-        SNode* singlyHead = SNode::getRandomList(size);
+        //SNode* singlyHead = SNode::getRandomList(size);
+        SNode* singlyHead = SNode::getReverseSortedList(size);
         singlyHead = BSortAlgs::singleBSort(singlyHead);
 
         SNode* current = singlyHead;

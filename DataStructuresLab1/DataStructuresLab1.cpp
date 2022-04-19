@@ -19,7 +19,7 @@ void exportSingleBSort(std::string name, int size, int resolution) {
     for (int i = increment; i < size; i += increment) {
         int completeness = 100 * i / size;
         std::cout << std::to_string(completeness) << "%" << std::endl;
-        SNode* randomList = SNode::getRandomList(i);
+        SNode* randomList = SNode::getReverseSortedList(i);
         auto start = high_resolution_clock::now();
         BSortAlgs::singleBSort(randomList);
         auto stop = high_resolution_clock::now();
@@ -51,8 +51,8 @@ void exportDoubleBSort(std::string name, int size, int resolution) {
 
 
 int main() {
-    exportSingleBSort("newSingle", 4800, 100);
-    //exportDoubleBSort("doubly", 4800, 100);
+    //exportSingleBSort("singleReversed", 10000, 100);
+    exportDoubleBSort("bigDoubly", 100000, 5);
     //Tests::doubleBSortCanSort(1000000);
     //Tests::singleBSortCanSort(100000);
 
